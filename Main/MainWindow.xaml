@@ -1,0 +1,283 @@
+﻿<Window x:Class="FruitsDB.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:viewModel="clr-namespace:FruitsDB.Main.ViewModel"
+        mc:Ignorable="d"
+        Title='База данных "Фрукты"' MinHeight="600" MinWidth="1090" Width="1500" WindowStartupLocation="CenterScreen">
+
+
+    <Window.DataContext>
+        <viewModel:ViewModelMain />
+    </Window.DataContext>
+
+
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <Button Command="{Binding ReportCommand}" Content="Отчет" Margin="0,0,0,0" VerticalAlignment="Center"/>
+
+            <GroupBox Header="Справочники" BorderThickness="1" BorderBrush="Blue" Padding="3" Margin="70,0,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <!--Кнопки-->
+                        <Style TargetType="Button" BasedOn="{StaticResource BlueButtonStyle}">
+                            <Setter Property="Width" Value="90" />
+                            <Setter Property="Height" Value="28" />
+                            <Setter Property="Margin" Value="5" />
+                            <Setter Property="VerticalAlignment" Value="Top" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <Button Command="{Binding FruitsCatalogCommand}" Content="Фрукты" Margin="2" Width="150"/>
+                    <Button Command="{Binding PriceCatalogCommand}" Content="График поставок" Margin="2" Width="150"/>
+                    <Button Command="{Binding ProvidersCatalogCommand}" Content="Поставщики" Margin="2" Width="150"/>
+                </StackPanel>
+            </GroupBox>
+
+            <Button Command="{Binding LoadStockCommand}" Content="Обновить" Margin="40,0,0,0" VerticalAlignment="Center"/>
+            <Button Command="{Binding SaveStockCommand}" Content="Сохранить" Margin="20,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <WrapPanel Grid.Row="1" Grid.Column="0" Margin="10,10,10,0" IsEnabled="{Binding FormStockLock}" Orientation="Horizontal">
+
+            <WrapPanel Orientation="Horizontal" IsEnabled="{Binding FormStockPropLock}">
+                <StackPanel DataContext="{Binding ListStockEntry}">
+                    <Label Margin="5,0,0,0">Дата поставки</Label>
+                    <DatePicker SelectedDate="{Binding DeliveryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedDateFormat="Long" Margin="5,0,5,5" Width="150"
+                                HorizontalAlignment="Left" />
+                </StackPanel>
+
+                <StackPanel>
+                    <Label Margin="5,0,0,0">Поставщик</Label>
+                    <ComboBox Margin="5,0,5,5"
+                              ItemsSource="{Binding ComboBoxListProvidersCatalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              DisplayMemberPath="NameProvider" IsSynchronizedWithCurrentItem="True" Width="300"
+                              SelectedValue="{Binding ComboBoxListProvidersCatalogEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </WrapPanel>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                <Button Command="{Binding AddStockCommand}" Content="Добавить" Margin="2" />
+                <Button Command="{Binding RemoveStockCommand}" Content="Удалить" Margin="2" />
+            </StackPanel>
+
+        </WrapPanel>
+
+        <Label Grid.Row="2" Grid.Column="0" Margin="15,0,0,0">Поставки</Label>
+        <ListView Grid.Row="3" Grid.Column="0" Margin="10,0,10,10" IsEnabled="{Binding FormStockLock}"
+                  ItemsSource="{Binding ListStock}" SelectedItem="{Binding ListStockEntry}" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,5,5,0" Orientation="Horizontal">
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="100">
+                                <Label Content="Дата поставки" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=DeliveryDate, StringFormat=d}" Style="{StaticResource ListStyleTextBlock}" />
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="200">
+                                <Label Content="Поставщик" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=ProvidersCatalog.NameProvider}" Style="{StaticResource ListStyleTextBlock}" TextWrapping="NoWrap"/>
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="100">
+                                <Label Content="Вес, кг" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=MassSumm}" Style="{StaticResource ListStyleTextBlock}" />
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="100">
+                                <Label Content="Сумма" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=PriceSumm, StringFormat={}{0:C}}" Style="{StaticResource ListStyleTextBlock}" />
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                                    Background="{TemplateBinding Background}" 
+                                                    Padding="{TemplateBinding Padding}" 
+                                                    Margin="{TemplateBinding Margin}">
+
+                                    <ContentPresenter/>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="True">
+                                        <Setter Property="BorderBrush" Value="GreenYellow"></Setter>
+                                        <Setter Property="BorderThickness" Value="1"></Setter>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
+                    <Style.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="Background" Value="GreenYellow" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="BorderBrush" Value="Crimson"></Setter>
+                                <Setter Property="BorderThickness" Value="2"></Setter>
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Style.Triggers>
+
+                </Style>
+            </ListView.ItemContainerStyle>
+
+        </ListView>
+
+        <!--==================================================-->
+
+        <WrapPanel Grid.Row="1" Grid.Column="1" Margin="10,10,10,0" Orientation="Horizontal">
+
+            <WrapPanel Orientation="Horizontal" 
+                        IsEnabled="{Binding DataContext.FormStockFruitsPropLock, ElementName=MainGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        DataContext="{Binding ListStockFruitsEntry}">
+                <StackPanel DataContext="{Binding Path=DataContext, ElementName=MainGrid}">
+                    <Label Margin="10,0,0,0">Фрукт</Label>
+                    <ComboBox Margin="5,0,5,5"
+                              ItemsSource="{Binding ComboBoxListFruitsCatalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              DisplayMemberPath="FullName" IsSynchronizedWithCurrentItem="True" Width="300"
+                              SelectedValue="{Binding ComboBoxListFruitsCatalogEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <StackPanel Width="100">
+                    <Label Content="Вес, кг" Margin="5,0,0,0"/>
+                    <TextBox Text="{Binding Path=Mass}" Width="90"/>
+                </StackPanel>
+
+                <StackPanel Width="100" IsEnabled="{Binding DataContext.PriceCatalogPropLock, ElementName=MainGrid}">
+                    <Label Content="Цена, за Кг" Margin="5,0,0,0"/>
+                    <TextBox Text="{Binding Path=Price, StringFormat={}{0:C}}" Width="90"/>
+                </StackPanel>
+            </WrapPanel>
+
+            <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, ElementName=MainGrid}" VerticalAlignment="Center" Margin="20,0,0,0">
+                <Button Command="{Binding AddStockFruitsCommand}" Content="Добавить" Margin="2" />
+                <Button Command="{Binding RemoveStockFruitsCommand}" Content="Удалить" Margin="2" />
+            </StackPanel>
+        </WrapPanel>
+
+        <Label Grid.Row="2" Grid.Column="1" Margin="15,0,0,0">Комплект поставки</Label>
+        <ListView Grid.Row="3" Grid.Column="1" Margin="10,0,10,10" ItemsSource="{Binding ListStockFruits}" SelectedItem="{Binding ListStockFruitsEntry}" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,5,5,0" Orientation="Horizontal">
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="200">
+                                <Label Content="Фрукт" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=FullName}" Style="{StaticResource ListStyleTextBlock}" TextWrapping="NoWrap"/>
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="100">
+                                <Label Content="Вес, кг" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=Mass}" Style="{StaticResource ListStyleTextBlock}" />
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource ListStyleStackPanel}" Width="170">
+                                <Label Visibility="{Binding PriceCatalogLbl}" Foreground="Red" Content="Цена, за Кг (из справочника)" Style="{StaticResource ListStyleLabelBlue}" />
+                                <Label Visibility="{Binding PriceLbl}" Content="Цена, за Кг" Style="{StaticResource ListStyleLabelBlue}" />
+                                <TextBlock Text="{Binding Path=PriceCatDb, StringFormat={}{0:C}}" Style="{StaticResource ListStyleTextBlock}" />
+                            </StackPanel>
+    
+                        </StackPanel>
+
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                                    Background="{TemplateBinding Background}" 
+                                                    Padding="{TemplateBinding Padding}" 
+                                                    Margin="{TemplateBinding Margin}">
+
+                                    <ContentPresenter/>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="True">
+                                        <Setter Property="BorderBrush" Value="GreenYellow"></Setter>
+                                        <Setter Property="BorderThickness" Value="1"></Setter>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
+                    <Style.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="Background" Value="Yellow" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter Property="BorderBrush" Value="Crimson"></Setter>
+                                <Setter Property="BorderThickness" Value="2"></Setter>
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </Style.Triggers>
+
+                </Style>
+            </ListView.ItemContainerStyle>
+
+        </ListView>
+
+    </Grid>
+</Window>

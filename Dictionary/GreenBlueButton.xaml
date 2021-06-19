@@ -1,0 +1,151 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="GreenBlueButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" BorderThickness="1" CornerRadius="1" SnapsToDevicePixels="True">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="{DynamicResource Background1}" Offset="1"/>
+                                <GradientStop Color="{DynamicResource Background2}"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="{DynamicResource BorderBrush1}" Offset="1"/>
+                                <GradientStop Color="{DynamicResource BorderBrush2}"/>
+                            </LinearGradientBrush>
+                        </Border.BorderBrush>
+                        <Grid>
+                            <Border x:Name="InnerHighlight" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" BorderThickness="1" 
+                                    BorderBrush="{DynamicResource BorderBorderBrush1}" SnapsToDevicePixels="True" >
+                                <ContentPresenter x:Name="Content" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border x:Name="TopHighlight" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBorderBrush2}" SnapsToDevicePixels="True"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" TargetName="TopHighlight" Value="0"/>
+                            <Setter Property="Opacity" TargetName="InnerHighlight" Value="0.3"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="{DynamicResource IsMouseOverBorderBrush1}" Offset="1"/>
+                                        <GradientStop Color="{DynamicResource IsMouseOverBorderBrush2}"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="{DynamicResource IsMouseOverBackground1}" Offset="1"/>
+                                        <GradientStop Color="{DynamicResource IsMouseOverBackground2}"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="{DynamicResource IsPressedBorderBrush1}" Offset="1"/>
+                                        <GradientStop Color="{DynamicResource IsPressedBorderBrush2}"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="{DynamicResource IsPressedBackground1}" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource IsPressedBackground2}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Opacity" TargetName="TopHighlight" Value="0"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="{DynamicResource IsFocusedBorderBrush1}" Offset="1"/>
+                                        <GradientStop Color="{DynamicResource IsFocusedBorderBrush2}"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsDefault" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="{DynamicResource IsDefaultBorderBrush1}" Offset="1"/>
+                                        <GradientStop Color="{DynamicResource IsDefaultBorderBrush2}"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Resource dictionary entries should be defined here. -->
+
+    <!--Background Button Color-->
+    <!--<Color x:Key="Background1">#FFAFB6B8</Color>
+    <Color x:Key="Background2">#FFDCE2E3</Color>-->
+    <Color x:Key="Background1">#87C824</Color>
+    <Color x:Key="Background2">GreenYellow</Color>
+    <!--BorderBrush Button Color-->
+    <!--<Color x:Key="BorderBrush1">#FF767C7E</Color>
+    <Color x:Key="BorderBrush2">#FFAFB6B8</Color>-->
+    <Color x:Key="BorderBrush1">#517816</Color>
+    <Color x:Key="BorderBrush2">#87C824</Color>
+    <!--Border Button Color-->
+    <Brush x:Key="BorderBorderBrush1">#4CFFFFFF</Brush>
+    <Brush x:Key="BorderBorderBrush2">#66FFFFFF</Brush>
+
+
+
+    <!--IsDefault Button Color-->
+
+    <!--IsDefaultBorderBrush Button Color-->
+    <Color x:Key="IsDefaultBorderBrush1">#FF068ACC</Color>
+    <Color x:Key="IsDefaultBorderBrush2">#FF34B2F1</Color>
+
+   
+    <!--IsFocused Button Color-->
+
+    <!--IsFocusedBorderBrush Button Color-->
+    <Color x:Key="IsFocusedBorderBrush1">#FF068ACC</Color>
+    <Color x:Key="IsFocusedBorderBrush2">#FF34B2F1</Color>
+
+
+    <!--IsPressed Button Color-->
+
+    <!--IsPressedBackground Button Color-->
+    <Color x:Key="IsPressedBackground1">#FF1CA1E3</Color>
+    <Color x:Key="IsPressedBackground2">#FF6AD4FF</Color>
+    <!--IsPressedBorderBrush Button Color-->
+    <Color x:Key="IsPressedBorderBrush1">#FF068ACC</Color>
+    <Color x:Key="IsPressedBorderBrush2">#FF34B2F1</Color>
+    
+
+    <!--IsMouseOver Button Color-->
+
+    <!--IsMouseOverBackground Button Color-->
+    <Color x:Key="IsMouseOverBackground1">#FF1CA1E3</Color>
+    <Color x:Key="IsMouseOverBackground2">#FF6AD4FF</Color>
+    <!--IsMouseOverBorderBrush Button Color-->
+    <Color x:Key="IsMouseOverBorderBrush1">#FF068ACC</Color>
+    <Color x:Key="IsMouseOverBorderBrush2">#FF34B2F1</Color>
+
+
+</ResourceDictionary>
